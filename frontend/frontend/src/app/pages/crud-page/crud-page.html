@@ -1,0 +1,178 @@
+@if (entity(); as def) {
+  <header class="page-head">
+    <div>
+      <h1>{{ def.title }}</h1>
+      <p class="intro">{{ def.intro }}</p>
+      <p class="source">
+        <span class="db-dot" [attr.data-db]="def.database" aria-hidden="true"></span>
+        Served by <strong>{{ def.service }}</strong> ({{ def.language }}, {{ def.database }}), owned by {{ def.owner }}
+      </p>
+    </div>
+    <button type="button" class="btn primary" (click)="openCreate()">Add {{ def.singular }}</button>
+  </header>
+
+  <div class="toolbar">
+    @if (def.filter; as filter) {
+      <label class="filter">
+        <span>{{ filter.label }}</span>
+        <select [ngModel]="filterValue()" (ngModelChange)="applyFilter($event)" name="list-filter">
+          <option [ngValue]="null">All</option>
+          @for (option of refOptions(filter.ref); track option.id) {
+            <option [ngValue]="option.id">{{ option.label }}</option>
+          }
+        </select>
+      </label>
+    }
+    <button type="button" class="btn ghost small" (click)="reload()" [disabled]="loading()">Refresh</button>
+    <span class="count">{{ rows().length }} {{ rows().length === 1 ? def.singular : def.title.toLowerCase() }}</span>
+  </div>
+
+  @if (notice()) {
+    <p class="notice" role="status">{{ notice() }}</p>
+  }
+  @if (errors().length) {
+    <div class="alert-box" role="alert">
+      @for (line of errors(); track $index) {
+        <p>{{ line }}</p>
+      }
+    </div>
+  }
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          @for (f of columns(); track f.key) {
+            <th scope="col">
+              {{ f.label }}@if (f.unit) {<span class="unit"> ({{ f.unit }})</span>}
+            </th>
+          }
+          <th scope="col" class="actions-col"><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row['id']) {
+          <tr>
+            @for (f of columns(); track f.key) {
+              <td [class.num]="f.type === 'number'" [class.nowrap]="f.type === 'date' || f.type === 'datetime'">
+                @if (f.key === 'severity') {
+                  <span class="severity" [attr.data-level]="row[f.key]">{{ display(row, f) }}</span>
+                } @else if (f.key === 'status' && def.key === 'reports') {
+                  <span class="status" [attr.data-status]="row[f.key]"
+                        [attr.title]="row['errorMessage'] || null">{{ display(row, f) }}</span>
+                } @else {
+                  {{ display(row, f) }}
+                }
+              </td>
+            }
+            <td class="row-actions">
+              @if (def.actions?.includes('generate')) {
+                <button type="button" class="btn small" (click)="generate(row)" [disabled]="busyId() === row['id']">
+                  {{ busyId() === row['id'] ? 'Generating…' : 'Generate' }}
+                </button>
+              }
+              @if (def.actions?.includes('download') && row['status'] === 'GENERATED') {
+                <a class="btn small" [href]="fileUrl(row)" target="_blank" rel="noopener">Download</a>
+              }
+              @if (def.actions?.includes('run')) {
+                <button type="button" class="btn small" (click)="run(row)" [disabled]="busyId() === row['id'] || !row['active']">
+                  {{ busyId() === row['id'] ? 'Running…' : 'Run now' }}
+                </button>
+              }
+              <button type="button" class="btn small" (click)="openEdit(row)">Edit</button>
+              <button type="button" class="btn small danger" (click)="remove(row)">Delete</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td [attr.colspan]="columns().length + 1" class="empty">
+              @if (loading()) {
+                Loading {{ def.title.toLowerCase() }}…
+              } @else if (!errors().length) {
+                No {{ def.title.toLowerCase() }} yet. Use “Add {{ def.singular }}” to create the first one.
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (formOpen()) {
+    <div class="backdrop" (click)="closeForm()"></div>
+    <aside class="drawer" role="dialog" aria-modal="true" [attr.aria-label]="formTitle()">
+      <form (ngSubmit)="save()" novalidate>
+        <div class="drawer-head">
+          <h2>{{ formTitle() }}</h2>
+          <button type="button" class="btn ghost small" (click)="closeForm()">Close</button>
+        </div>
+
+        @if (formErrors().length) {
+          <div class="alert-box" role="alert">
+            @for (line of formErrors(); track $index) {
+              <p>{{ line }}</p>
+            }
+          </div>
+        }
+
+        @for (f of formFields(); track f.key) {
+          <div class="field" [class.check]="f.type === 'checkbox'">
+            @switch (f.type) {
+              @case ('checkbox') {
+                <label>
+                  <input type="checkbox" [name]="f.key" [(ngModel)]="draft[f.key]" />
+                  {{ f.label }}
+                </label>
+              }
+              @case ('select') {
+                <label [for]="'f-' + f.key">{{ f.label }}@if (f.required) {<span class="req"> (required)</span>}</label>
+                <select [id]="'f-' + f.key" [name]="f.key" [(ngModel)]="draft[f.key]">
+                  @if (!f.required) {
+                    <option [ngValue]="null">None</option>
+                  }
+                  @for (option of f.options ?? []; track option) {
+                    <option [ngValue]="option">{{ humanize(option) }}</option>
+                  }
+                </select>
+              }
+              @case ('ref') {
+                <label [for]="'f-' + f.key">{{ f.label }}@if (f.required) {<span class="req"> (required)</span>}</label>
+                <select [id]="'f-' + f.key" [name]="f.key" [(ngModel)]="draft[f.key]">
+                  <option [ngValue]="null">{{ f.required ? 'Choose…' : 'None' }}</option>
+                  @for (option of refOptions(f.ref!); track option.id) {
+                    <option [ngValue]="option.id">{{ option.label }}</option>
+                  }
+                </select>
+                @if (!refOptions(f.ref!).length) {
+                  <small class="hint">No {{ refTitle(f.ref!) }} yet. Create one first.</small>
+                }
+              }
+              @case ('textarea') {
+                <label [for]="'f-' + f.key">{{ f.label }}@if (f.required) {<span class="req"> (required)</span>}</label>
+                <textarea [id]="'f-' + f.key" [name]="f.key" rows="4" [(ngModel)]="draft[f.key]"></textarea>
+              }
+              @default {
+                <label [for]="'f-' + f.key">
+                  {{ f.label }}@if (f.unit) {<span class="unit"> ({{ f.unit }})</span>}@if (f.required) {<span class="req"> (required)</span>}
+                </label>
+                <input [id]="'f-' + f.key" [name]="f.key" [type]="inputType(f)" [(ngModel)]="draft[f.key]"
+                       [attr.min]="f.min ?? null" [attr.max]="f.max ?? null"
+                       [attr.step]="f.type === 'number' ? 'any' : null" />
+              }
+            }
+          </div>
+        }
+
+        <div class="drawer-foot">
+          <button type="submit" class="btn primary" [disabled]="saving()">
+            {{ saving() ? 'Saving…' : editingId() === null ? 'Create ' + def.singular : 'Save changes' }}
+          </button>
+          <button type="button" class="btn ghost" (click)="closeForm()">Cancel</button>
+        </div>
+      </form>
+    </aside>
+  }
+} @else {
+  <h1>Page not found</h1>
+  <p class="muted">This page does not exist. Pick an entry in the menu.</p>
+}
