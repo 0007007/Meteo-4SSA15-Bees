@@ -1,0 +1,41 @@
+# Databases only. The Spring Boot services run from IntelliJ / Maven on the host.
+# Already have MySQL or PostgreSQL installed? Skip the matching container and edit application.yml.
+services:
+  postgres:
+    image: postgres:17
+    container_name: meteo-postgres
+    environment:
+      POSTGRES_USER: meteo
+      POSTGRES_PASSWORD: meteo
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - postgres-data:/var/lib/postgresql/data
+
+  mysql:
+    image: mysql:8.4
+    container_name: meteo-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: meteo
+      MYSQL_PASSWORD: meteo
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - mysql-data:/var/lib/mysql
+
+  mongo:
+    image: mongo:8
+    container_name: meteo-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  postgres-data:
+  mysql-data:
+  mongo-data:

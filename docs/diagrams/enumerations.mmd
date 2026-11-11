@@ -1,0 +1,90 @@
+---
+title: Meteo App - Enumerations used by the entities
+---
+classDiagram
+    direction LR
+    namespace station_service {
+        class StationStatus { <<enumeration>>
+            ACTIVE
+            MAINTENANCE
+            INACTIVE }
+        class SensorType { <<enumeration>>
+            TEMPERATURE
+            HUMIDITY
+            PRESSURE
+            WIND_SPEED
+            WIND_DIRECTION
+            PRECIPITATION
+            UV }
+    }
+    namespace observation_service {
+        class AirQualityLevel { <<enumeration>>
+            GOOD
+            MODERATE
+            UNHEALTHY_FOR_SENSITIVE
+            UNHEALTHY
+            VERY_UNHEALTHY
+            HAZARDOUS }
+    }
+    namespace forecast_service {
+        class WeatherCondition { <<enumeration>>
+            SUNNY
+            PARTLY_CLOUDY
+            CLOUDY
+            RAIN
+            THUNDERSTORM
+            SNOW
+            FOG
+            WINDY
+            SANDSTORM }
+    }
+    namespace alert_service {
+        class AlertType { <<enumeration>>
+            HEAT_WAVE
+            STORM
+            HEAVY_RAIN
+            FLOOD
+            STRONG_WIND
+            SNOW
+            SANDSTORM
+            FOREST_FIRE_RISK }
+        class Severity { <<enumeration>>
+            YELLOW
+            ORANGE
+            RED }
+        class NotificationChannel { <<enumeration>>
+            EMAIL
+            SMS
+            PUSH }
+        class NotificationStatus { <<enumeration>>
+            PENDING
+            SENT
+            FAILED
+            READ }
+    }
+    namespace user_service {
+        class TemperatureUnit { <<enumeration>>
+            CELSIUS
+            FAHRENHEIT }
+        class Role { <<enumeration>>
+            USER
+            ADMIN }
+    }
+    namespace report_service {
+        class ReportType { <<enumeration>>
+            SUMMARY
+            OBSERVATIONS
+            FORECASTS
+            ALERTS }
+        class ReportFormat { <<enumeration>>
+            CSV
+            PDF }
+        class ReportStatus { <<enumeration>>
+            PENDING
+            GENERATED
+            FAILED }
+        class Frequency { <<enumeration>>
+            DAILY
+            WEEKLY
+            MONTHLY }
+    }

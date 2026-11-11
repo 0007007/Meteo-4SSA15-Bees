@@ -1,0 +1,58 @@
+server:
+  port: 8090   # 8080 is left to Oracle
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: geo-service
+              uri: lb://geo-service
+              predicates:
+                - Path=/api/countries/**,/api/cities/**
+            - id: station-service
+              uri: lb://station-service
+              predicates:
+                - Path=/api/stations/**,/api/sensors/**
+            - id: observation-service
+              uri: lb://observation-service
+              predicates:
+                - Path=/api/observations/**,/api/air-quality/**
+            - id: forecast-service
+              uri: lb://forecast-service
+              predicates:
+                - Path=/api/forecast-models/**,/api/forecasts/**
+            - id: alert-service
+              uri: lb://alert-service
+              predicates:
+                - Path=/api/alerts/**,/api/notifications/**
+            - id: user-service
+              uri: lb://user-service
+              predicates:
+                - Path=/api/users/**,/api/favorites/**
+            - id: report-service          # 7th microservice, Python (FastAPI) - registered in Eureka
+              uri: lb://report-service      # if Eureka registration fails, use: http://localhost:8087
+              predicates:
+                - Path=/api/reports/**,/api/report-schedules/**
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origins: "http://localhost:4200"   # Angular frontend (npm start)
+                allowed-methods: "*"
+                allowed-headers: "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway

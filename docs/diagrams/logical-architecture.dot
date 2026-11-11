@@ -1,0 +1,98 @@
+// Meteo App - Logical architecture
+// Render: dot -Tpng -Gdpi=200 logical-architecture.dot -o logical-architecture.png
+digraph logical {
+    graph [rankdir=TB, compound=true, newrank=true, fontname="Inter", fontsize=22, labelloc=t,
+           label=<<b>Meteo App - Logical architecture</b><br/><font point-size="15" color="#555555">Every request enters through the gateway; each microservice owns its database</font><br/> >,
+           nodesep=0.35, ranksep=0.65, pad=0.4, bgcolor="white"];
+    node  [shape=box, style="rounded,filled", fontname="Inter", fontsize=13, penwidth=1.4,
+           fillcolor="#F4F6FA", color="#3B4A6B", margin="0.18,0.10"];
+    edge  [fontname="Inter", fontsize=11, color="#3B4A6B", fontcolor="#333333", penwidth=1.2, arrowsize=0.8];
+
+
+    // ---------------- Layer names (left column)
+    node [shape=plaintext, style="", fontsize=14, margin="0,0"];
+    lane1 [label=<<b>1. Client layer</b><br align="left"/><font point-size="11" color="#555555">Angular app, Postman</font><br align="left"/>>];
+    lane2 [label=<<b>2. Edge layer</b><br align="left"/><font point-size="11" color="#555555">Spring Cloud: entry point<br align="left"/>and service registry</font><br align="left"/>>];
+    lane3 [label=<<b>3. Business layer</b><br align="left"/><font point-size="11" color="#555555">6 Spring Boot + 1 Python<br align="left"/>controller &#8594; service &#8594;<br align="left"/>repository &#8594; entity</font><br align="left"/>>];
+    lane4 [label=<<b>4. Data layer</b><br align="left"/><font point-size="11" color="#555555">one database per service</font><br align="left"/>>];
+    lane1 -> lane2 -> lane3 -> lane4 [style=invis];
+    node [shape=box, style="rounded,filled", fontsize=13, margin="0.18,0.10"];
+
+    // ---------------- Client layer
+    subgraph cluster_client {
+        label=""; style="rounded,dashed"; color="#9AA3B5";
+        web     [label=<<b>Angular frontend</b> :4200<br/><font point-size="11">weather page + 14 management pages</font>>, penwidth=2];
+        postman [label=<<b>Postman / mobile app</b><br/><font point-size="11">REST + JSON</font>>];
+    }
+
+    // ---------------- Edge layer
+    subgraph cluster_edge {
+        label=""; style="rounded,dashed"; color="#9AA3B5";
+        gateway [label=<<b>API Gateway</b> :8090<br/><font point-size="11">Spring Cloud Gateway<br/>routes /api/** to a service, load-balances (lb://)</font>>,
+                 fillcolor="#EDE7F6", color="#5E35B1", penwidth=2];
+        eureka  [label=<<b>Discovery Server</b> :8761<br/><font point-size="11">Eureka service registry<br/>name to address of each instance</font>>,
+                 fillcolor="#EDE7F6", color="#5E35B1"];
+    }
+
+    // ---------------- Business layer
+    subgraph cluster_business {
+        label=""; style="rounded,dashed"; color="#9AA3B5";
+        geo  [label=<<b>geo-service</b> :8081<br/><font point-size="11">Member 1<br/>Country, City</font>>, fillcolor="#E3EDF9", color="#336791"];
+        sta  [label=<<b>station-service</b> :8082<br/><font point-size="11">Member 2<br/>WeatherStation, Sensor</font>>, fillcolor="#E3EDF9", color="#336791"];
+        obs  [label=<<b>observation-service</b> :8083<br/><font point-size="11">Member 3<br/>Observation, AirQuality</font>>, fillcolor="#E6F4EA", color="#2E7D32"];
+        fct  [label=<<b>forecast-service</b> :8084<br/><font point-size="11">Member 4<br/>Forecast, ForecastModel</font>>, fillcolor="#E6F4EA", color="#2E7D32"];
+        alr  [label=<<b>alert-service</b> :8085<br/><font point-size="11">Member 5<br/>Alert, Notification</font>>, fillcolor="#FDF0E1", color="#C26A00"];
+        usr  [label=<<b>user-service</b> :8086<br/><font point-size="11">Member 6<br/>User, FavoriteLocation</font>>, fillcolor="#FDF0E1", color="#C26A00"];
+        rep  [label=<<b>report-service</b> :8087<br/><font point-size="11">Python + FastAPI<br/>Report, ReportSchedule</font>>, fillcolor="#E3EDF9", color="#336791", style="rounded,filled,dashed", penwidth=1.8];
+    }
+
+    // ---------------- Data layer
+    subgraph cluster_data {
+        label=""; style="rounded,dashed"; color="#9AA3B5";
+        node [shape=cylinder, style=filled, margin="0.12,0.06"];
+        geo_db [label=<<b>geo_db</b><br/><font point-size="10">PostgreSQL</font>>, fillcolor="#E3EDF9", color="#336791"];
+        sta_db [label=<<b>station_db</b><br/><font point-size="10">PostgreSQL</font>>, fillcolor="#E3EDF9", color="#336791"];
+        obs_db [label=<<b>observation_db</b><br/><font point-size="10">MongoDB</font>>, fillcolor="#E6F4EA", color="#2E7D32"];
+        fct_db [label=<<b>forecast_db</b><br/><font point-size="10">MongoDB</font>>, fillcolor="#E6F4EA", color="#2E7D32"];
+        alr_db [label=<<b>alert_db</b><br/><font point-size="10">MySQL</font>>, fillcolor="#FDF0E1", color="#C26A00"];
+        usr_db [label=<<b>user_db</b><br/><font point-size="10">MySQL</font>>, fillcolor="#FDF0E1", color="#C26A00"];
+        rep_db [label=<<b>report_db</b><br/><font point-size="10">PostgreSQL</font>>, fillcolor="#E3EDF9", color="#336791"];
+    }
+
+    { rank=same; lane1; web; postman; }
+    { rank=same; lane2; eureka; gateway; }
+    { rank=same; lane3; geo; sta; obs; fct; alr; usr; rep; }
+    { rank=same; lane4; geo_db; sta_db; obs_db; fct_db; alr_db; usr_db; rep_db; }
+
+    // client -> gateway
+    web     -> gateway [label=" HTTP /api/**"];
+    postman -> gateway [label=" HTTP /api/**"];
+
+    // gateway -> services
+    gateway -> geo [label="/api/countries\n/api/cities", fontsize=10];
+    gateway -> sta [label="/api/stations\n/api/sensors", fontsize=10];
+    gateway -> obs [label="/api/observations\n/api/air-quality", fontsize=10];
+    gateway -> fct [label="/api/forecasts\n/api/forecast-models", fontsize=10];
+    gateway -> alr [label="/api/alerts\n/api/notifications", fontsize=10];
+    gateway -> usr [label="/api/users\n/api/favorites", fontsize=10];
+    gateway -> rep [label="/api/reports\n/api/report-schedules", fontsize=10];
+
+    // discovery
+    gateway -> eureka [style=dashed, color="#5E35B1", fontcolor="#5E35B1", label=" looks up\n instances", constraint=false];
+    rep -> eureka [style=dashed, color="#5E35B1", fontcolor="#5E35B1", ltail=cluster_business,
+                   label="  every service\n  registers at startup", constraint=false];
+
+    // services -> databases
+    geo -> geo_db [label=" JPA"];
+    sta -> sta_db [label=" JPA"];
+    obs -> obs_db [label=" Spring Data\n MongoDB"];
+    fct -> fct_db [label=" Spring Data\n MongoDB"];
+    alr -> alr_db [label=" JPA"];
+    usr -> usr_db [label=" JPA"];
+    rep -> rep_db [label=" SQLAlchemy"];
+    rep -> gateway [style=dotted, color="#336791", fontcolor="#336791", constraint=false,
+                    label=<  reads cities, stations,<br/>  observations, forecasts, alerts<br/>  to build CSV / PDF>];
+
+    // cross-service references (ids only, no call for now)
+    edge [style=dotted, color="#888888", arrowhead=none, fontcolor="#777777", constraint=false];
+}

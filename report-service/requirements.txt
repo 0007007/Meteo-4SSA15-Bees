@@ -1,0 +1,9 @@
+# report-service (7th microservice) - Python 3.11+
+fastapi>=0.115
+uvicorn[standard]>=0.30
+sqlalchemy>=2.0
+psycopg[binary]>=3.2
+pydantic>=2.7
+requests>=2.32
+reportlab>=4.2
+py-eureka-client>=0.11

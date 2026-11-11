@@ -1,0 +1,44 @@
+<div class="shell">
+  <header class="sidebar" [class.open]="menuOpen()">
+    <div class="sidebar-top">
+      <a class="brand" routerLink="/" (click)="closeMenu()">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <circle cx="24" cy="26" r="12" fill="#F2B632" />
+          <path d="M20 50h28a10 10 0 0 0 0-20 14 14 0 0 0-27 4 8 8 0 0 0-1 16z" fill="#2B67A8" />
+        </svg>
+        <span>Meteo App</span>
+      </a>
+      <button type="button" class="menu-toggle" (click)="menuOpen.set(!menuOpen())"
+              [attr.aria-expanded]="menuOpen()" aria-controls="main-nav">
+        {{ menuOpen() ? 'Close' : 'Menu' }}
+      </button>
+    </div>
+
+    <nav id="main-nav" class="nav" aria-label="Main">
+      <a class="nav-weather" routerLink="/" routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Weather</a>
+
+      @for (group of groups; track group.service) {
+        <section class="nav-group" [attr.aria-label]="group.label">
+          <h2>{{ group.label }}</h2>
+          @for (item of group.items; track item.key) {
+            <a [routerLink]="['/manage', item.key]" routerLinkActive="active" (click)="closeMenu()">
+              <span class="db-dot" [attr.data-db]="item.database" aria-hidden="true"></span>{{ item.title }}
+            </a>
+          }
+        </section>
+      }
+
+      <p class="legend">
+        Dot colour shows the database:
+        <span><i class="db-dot" data-db="PostgreSQL"></i>PostgreSQL</span>
+        <span><i class="db-dot" data-db="MongoDB"></i>MongoDB</span>
+        <span><i class="db-dot" data-db="MySQL"></i>MySQL</span>
+      </p>
+    </nav>
+  </header>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+</div>

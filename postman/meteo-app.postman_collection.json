@@ -1,0 +1,1171 @@
+{
+  "info": {
+    "name": "Meteo App - CRUD (via gateway :8090)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "geo-service / Country",
+      "item": [
+        {
+          "name": "Create Country",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/countries",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tunisia\",\n  \"isoCode\": \"TN\",\n  \"continent\": \"Africa\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('countryId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List Country",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/countries"
+          }
+        },
+        {
+          "name": "Get Country by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/countries/{{countryId}}"
+          }
+        },
+        {
+          "name": "Update Country",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/countries/{{countryId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tunisia\",\n  \"isoCode\": \"TN\",\n  \"continent\": \"Africa\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Country",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/countries/{{countryId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "geo-service / City",
+      "item": [
+        {
+          "name": "Create City",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/cities",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tunis\",\n  \"latitude\": 36.8065,\n  \"longitude\": 10.1815,\n  \"timezone\": \"Africa/Tunis\",\n  \"country\": {\n    \"id\": 1\n  }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('cityId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List City",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/cities"
+          }
+        },
+        {
+          "name": "Get City by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/cities/{{cityId}}"
+          }
+        },
+        {
+          "name": "Update City",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/cities/{{cityId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tunis\",\n  \"latitude\": 36.8065,\n  \"longitude\": 10.1815,\n  \"timezone\": \"Africa/Tunis\",\n  \"country\": {\n    \"id\": 1\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete City",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/cities/{{cityId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "station-service / WeatherStation",
+      "item": [
+        {
+          "name": "Create WeatherStation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/stations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"TUN-001\",\n  \"name\": \"Tunis-Carthage station\",\n  \"latitude\": 36.851,\n  \"longitude\": 10.227,\n  \"altitude\": 4.0,\n  \"installationDate\": \"2020-03-15\",\n  \"status\": \"ACTIVE\",\n  \"cityId\": 1\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('weatherStationId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List WeatherStation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/stations"
+          }
+        },
+        {
+          "name": "Get WeatherStation by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/stations/{{weatherStationId}}"
+          }
+        },
+        {
+          "name": "Update WeatherStation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/stations/{{weatherStationId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"TUN-001\",\n  \"name\": \"Tunis-Carthage station\",\n  \"latitude\": 36.851,\n  \"longitude\": 10.227,\n  \"altitude\": 4.0,\n  \"installationDate\": \"2020-03-15\",\n  \"status\": \"ACTIVE\",\n  \"cityId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete WeatherStation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/stations/{{weatherStationId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "station-service / Sensor",
+      "item": [
+        {
+          "name": "Create Sensor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/sensors",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serialNumber\": \"SN-TMP-0001\",\n  \"type\": \"TEMPERATURE\",\n  \"unit\": \"°C\",\n  \"lastCalibrationDate\": \"2026-09-01\",\n  \"active\": true,\n  \"station\": {\n    \"id\": 1\n  }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('sensorId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List Sensor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/sensors"
+          }
+        },
+        {
+          "name": "Get Sensor by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/sensors/{{sensorId}}"
+          }
+        },
+        {
+          "name": "Update Sensor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/sensors/{{sensorId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serialNumber\": \"SN-TMP-0001\",\n  \"type\": \"TEMPERATURE\",\n  \"unit\": \"°C\",\n  \"lastCalibrationDate\": \"2026-09-01\",\n  \"active\": true,\n  \"station\": {\n    \"id\": 1\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Sensor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/sensors/{{sensorId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "observation-service / Observation",
+      "item": [
+        {
+          "name": "Create Observation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/observations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stationId\": 1,\n  \"observedAt\": \"2026-11-10T14:00:00\",\n  \"temperature\": 19.5,\n  \"humidity\": 62.0,\n  \"pressure\": 1015.2,\n  \"windSpeed\": 14.0,\n  \"windDirection\": 270,\n  \"precipitation\": 0.0\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('observationId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List Observation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/observations"
+          }
+        },
+        {
+          "name": "Get Observation by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/observations/{{observationId}}"
+          }
+        },
+        {
+          "name": "Update Observation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/observations/{{observationId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stationId\": 1,\n  \"observedAt\": \"2026-11-10T14:00:00\",\n  \"temperature\": 19.5,\n  \"humidity\": 62.0,\n  \"pressure\": 1015.2,\n  \"windSpeed\": 14.0,\n  \"windDirection\": 270,\n  \"precipitation\": 0.0\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Observation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/observations/{{observationId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "observation-service / AirQuality",
+      "item": [
+        {
+          "name": "Create AirQuality",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/air-quality",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cityId\": 1,\n  \"measuredAt\": \"2026-11-10T14:00:00\",\n  \"aqi\": 42,\n  \"pm25\": 9.8,\n  \"pm10\": 21.4,\n  \"o3\": 48.0,\n  \"no2\": 17.5,\n  \"level\": \"GOOD\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('airQualityId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List AirQuality",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/air-quality"
+          }
+        },
+        {
+          "name": "Get AirQuality by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/air-quality/{{airQualityId}}"
+          }
+        },
+        {
+          "name": "Update AirQuality",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/air-quality/{{airQualityId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cityId\": 1,\n  \"measuredAt\": \"2026-11-10T14:00:00\",\n  \"aqi\": 42,\n  \"pm25\": 9.8,\n  \"pm10\": 21.4,\n  \"o3\": 48.0,\n  \"no2\": 17.5,\n  \"level\": \"GOOD\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete AirQuality",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/air-quality/{{airQualityId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "forecast-service / ForecastModel",
+      "item": [
+        {
+          "name": "Create ForecastModel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/forecast-models",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"GFS\",\n  \"provider\": \"NOAA\",\n  \"version\": \"16\",\n  \"resolutionKm\": 13.0,\n  \"horizonDays\": 16,\n  \"description\": \"Global Forecast System\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('forecastModelId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List ForecastModel",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/forecast-models"
+          }
+        },
+        {
+          "name": "Get ForecastModel by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/forecast-models/{{forecastModelId}}"
+          }
+        },
+        {
+          "name": "Update ForecastModel",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/forecast-models/{{forecastModelId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"GFS\",\n  \"provider\": \"NOAA\",\n  \"version\": \"16\",\n  \"resolutionKm\": 13.0,\n  \"horizonDays\": 16,\n  \"description\": \"Global Forecast System\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete ForecastModel",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/forecast-models/{{forecastModelId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "forecast-service / Forecast",
+      "item": [
+        {
+          "name": "Create Forecast",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/forecasts",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cityId\": 1,\n  \"forecastDate\": \"2026-11-11\",\n  \"minTemperature\": 14.0,\n  \"maxTemperature\": 21.0,\n  \"condition\": \"PARTLY_CLOUDY\",\n  \"precipitationProbability\": 20,\n  \"windSpeed\": 18.0,\n  \"modelId\": \"{{forecastModelId}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('forecastId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List Forecast",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/forecasts"
+          }
+        },
+        {
+          "name": "Get Forecast by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/forecasts/{{forecastId}}"
+          }
+        },
+        {
+          "name": "Update Forecast",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/forecasts/{{forecastId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cityId\": 1,\n  \"forecastDate\": \"2026-11-11\",\n  \"minTemperature\": 14.0,\n  \"maxTemperature\": 21.0,\n  \"condition\": \"PARTLY_CLOUDY\",\n  \"precipitationProbability\": 20,\n  \"windSpeed\": 18.0,\n  \"modelId\": \"{{forecastModelId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Forecast",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/forecasts/{{forecastId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "alert-service / Alert",
+      "item": [
+        {
+          "name": "Create Alert",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/alerts",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Strong wind warning\",\n  \"description\": \"Gusts up to 80 km/h expected along the coast.\",\n  \"type\": \"STRONG_WIND\",\n  \"severity\": \"ORANGE\",\n  \"cityId\": 1,\n  \"startTime\": \"2026-11-11T06:00:00\",\n  \"endTime\": \"2026-11-11T20:00:00\",\n  \"active\": true\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('alertId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List Alert",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/alerts"
+          }
+        },
+        {
+          "name": "Get Alert by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/alerts/{{alertId}}"
+          }
+        },
+        {
+          "name": "Update Alert",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/alerts/{{alertId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Strong wind warning\",\n  \"description\": \"Gusts up to 80 km/h expected along the coast.\",\n  \"type\": \"STRONG_WIND\",\n  \"severity\": \"ORANGE\",\n  \"cityId\": 1,\n  \"startTime\": \"2026-11-11T06:00:00\",\n  \"endTime\": \"2026-11-11T20:00:00\",\n  \"active\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Alert",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/alerts/{{alertId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "alert-service / Notification",
+      "item": [
+        {
+          "name": "Create Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/notifications",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"channel\": \"EMAIL\",\n  \"message\": \"Orange alert: strong wind in Tunis tomorrow.\",\n  \"status\": \"PENDING\",\n  \"alert\": {\n    \"id\": 1\n  }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('notificationId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List Notification",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/notifications"
+          }
+        },
+        {
+          "name": "Get Notification by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/notifications/{{notificationId}}"
+          }
+        },
+        {
+          "name": "Update Notification",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/notifications/{{notificationId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"channel\": \"EMAIL\",\n  \"message\": \"Orange alert: strong wind in Tunis tomorrow.\",\n  \"status\": \"PENDING\",\n  \"alert\": {\n    \"id\": 1\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Notification",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/notifications/{{notificationId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "user-service / User",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Amira\",\n  \"lastName\": \"Ben Salah\",\n  \"email\": \"amira.bensalah@example.com\",\n  \"phone\": \"+21620000000\",\n  \"preferredUnit\": \"CELSIUS\",\n  \"role\": \"USER\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('userId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/users"
+          }
+        },
+        {
+          "name": "Get User by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/users/{{userId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Amira\",\n  \"lastName\": \"Ben Salah\",\n  \"email\": \"amira.bensalah@example.com\",\n  \"phone\": \"+21620000000\",\n  \"preferredUnit\": \"CELSIUS\",\n  \"role\": \"USER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "user-service / FavoriteLocation",
+      "item": [
+        {
+          "name": "Create FavoriteLocation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/favorites",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cityId\": 1,\n  \"label\": \"Home\",\n  \"alertsEnabled\": true,\n  \"user\": {\n    \"id\": 1\n  }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('favoriteLocationId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List FavoriteLocation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/favorites"
+          }
+        },
+        {
+          "name": "Get FavoriteLocation by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/favorites/{{favoriteLocationId}}"
+          }
+        },
+        {
+          "name": "Update FavoriteLocation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/favorites/{{favoriteLocationId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cityId\": 1,\n  \"label\": \"Home\",\n  \"alertsEnabled\": true,\n  \"user\": {\n    \"id\": 1\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete FavoriteLocation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/favorites/{{favoriteLocationId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "report-service (Python) / ReportSchedule",
+      "item": [
+        {
+          "name": "Create ReportSchedule",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/report-schedules",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Weekly summary - Tunis\",\n  \"cityId\": 1,\n  \"reportType\": \"SUMMARY\",\n  \"format\": \"PDF\",\n  \"frequency\": \"WEEKLY\",\n  \"recipientEmail\": \"team@example.com\",\n  \"active\": true\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('reportScheduleId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List ReportSchedule",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/report-schedules"
+          }
+        },
+        {
+          "name": "Get ReportSchedule by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/report-schedules/{{reportScheduleId}}"
+          }
+        },
+        {
+          "name": "Update ReportSchedule",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/report-schedules/{{reportScheduleId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Weekly summary - Tunis\",\n  \"cityId\": 1,\n  \"reportType\": \"SUMMARY\",\n  \"format\": \"PDF\",\n  \"frequency\": \"WEEKLY\",\n  \"recipientEmail\": \"team@example.com\",\n  \"active\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Run schedule now (creates + generates a report)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/report-schedules/{{reportScheduleId}}/run"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('reportId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete ReportSchedule",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/report-schedules/{{reportScheduleId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "report-service (Python) / Report",
+      "item": [
+        {
+          "name": "Create Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/reports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tunis - observations\",\n  \"cityId\": 1,\n  \"reportType\": \"OBSERVATIONS\",\n  \"format\": \"PDF\",\n  \"periodStart\": \"2026-11-01\",\n  \"periodEnd\": \"2026-11-30\",\n  \"scheduleId\": null\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('reportId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/reports"
+          }
+        },
+        {
+          "name": "Get Report by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/reports/{{reportId}}"
+          }
+        },
+        {
+          "name": "Update Report",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/reports/{{reportId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tunis - observations\",\n  \"cityId\": 1,\n  \"reportType\": \"OBSERVATIONS\",\n  \"format\": \"PDF\",\n  \"periodStart\": \"2026-11-01\",\n  \"periodEnd\": \"2026-11-30\",\n  \"scheduleId\": null\n}"
+            }
+          }
+        },
+        {
+          "name": "Generate report file",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/reports/{{reportId}}/generate"
+          }
+        },
+        {
+          "name": "Download report file",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/reports/{{reportId}}/download"
+          }
+        },
+        {
+          "name": "Delete Report",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/reports/{{reportId}}"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8090"
+    },
+    {
+      "key": "countryId",
+      "value": "1"
+    },
+    {
+      "key": "cityId",
+      "value": "1"
+    },
+    {
+      "key": "weatherStationId",
+      "value": "1"
+    },
+    {
+      "key": "sensorId",
+      "value": "1"
+    },
+    {
+      "key": "observationId",
+      "value": ""
+    },
+    {
+      "key": "airQualityId",
+      "value": ""
+    },
+    {
+      "key": "forecastModelId",
+      "value": ""
+    },
+    {
+      "key": "forecastId",
+      "value": ""
+    },
+    {
+      "key": "alertId",
+      "value": "1"
+    },
+    {
+      "key": "notificationId",
+      "value": "1"
+    },
+    {
+      "key": "userId",
+      "value": "1"
+    },
+    {
+      "key": "favoriteLocationId",
+      "value": "1"
+    },
+    {
+      "key": "reportScheduleId",
+      "value": ""
+    },
+    {
+      "key": "reportId",
+      "value": ""
+    }
+  ]
+}
