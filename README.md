@@ -6,7 +6,7 @@ alert-service owns weather warnings: alerts for a city with a vigilance level (y
 
 | Item | Value |
 | --- | --- |
-| Owner | Member 5 |
+| Owner | Tasnim Samoud |
 | Entities | Alert and Notification |
 | Stack | Java 21, Spring Boot 4.0.8, Spring Data JPA (Hibernate), Bean Validation, Eureka client |
 | Port | 8085 (clients use the gateway on 8090) |
