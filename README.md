@@ -6,12 +6,12 @@ Port **8080 is never used** (reserved for Oracle).
 
 | Member | Module | Entities | Database | Port |
 |---|---|---|---|---|
-| Member 1 | `geo-service` | Country, City | PostgreSQL (`geo_db`) | 8081 |
-| Member 2 | `station-service` | WeatherStation, Sensor | PostgreSQL (`station_db`) | 8082 |
-| Member 3 | `observation-service` | Observation, AirQuality | MongoDB (`observation_db`) | 8083 |
-| Member 4 | `forecast-service` | ForecastModel, Forecast | MongoDB (`forecast_db`) | 8084 |
-| Member 5 | `alert-service` | Alert, Notification | MySQL (`alert_db`) | 8085 |
-| Member 6 | `user-service` | User, FavoriteLocation | MySQL (`user_db`) | 8086 |
+| Hamza Najjar | `geo-service` | Country, City | PostgreSQL (`geo_db`) | 8081 |
+| Aziz Kchaou | `station-service` | WeatherStation, Sensor | PostgreSQL (`station_db`) | 8082 |
+| Azer Slimani | `observation-service` | Observation, AirQuality | MongoDB (`observation_db`) | 8083 |
+| Ghassen Saidani | `forecast-service` | ForecastModel, Forecast | MongoDB (`forecast_db`) | 8084 |
+| Tasnim Samoud | `alert-service` | Alert, Notification | MySQL (`alert_db`) | 8085 |
+| Yasmine Hammouda | `user-service` | User, FavoriteLocation | MySQL (`user_db`) | 8086 |
 | Team | `report-service` (Python) | Report, ReportSchedule | PostgreSQL (`report_db`) | 8087 |
 | Shared | `api-gateway` | - | - | 8090 |
 | Shared | `discovery-server` | - | - | 8761 |
