@@ -1,0 +1,17 @@
+com\meteo\alert\AlertServiceApplication.class
+com\meteo\alert\controller\NotificationController.class
+com\meteo\alert\service\AlertService.class
+com\meteo\alert\service\NotificationService.class
+com\meteo\alert\entity\Notification.class
+com\meteo\alert\entity\Severity.class
+com\meteo\alert\repository\NotificationRepository.class
+com\meteo\alert\entity\NotificationStatus.class
+com\meteo\alert\service\impl\AlertServiceImpl.class
+com\meteo\alert\entity\AlertType.class
+com\meteo\alert\controller\AlertController.class
+com\meteo\alert\exception\GlobalExceptionHandler.class
+com\meteo\alert\entity\NotificationChannel.class
+com\meteo\alert\service\impl\NotificationServiceImpl.class
+com\meteo\alert\entity\Alert.class
+com\meteo\alert\exception\ResourceNotFoundException.class
+com\meteo\alert\repository\AlertRepository.class
