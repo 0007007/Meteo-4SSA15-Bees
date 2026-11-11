@@ -6,7 +6,7 @@ geo-service owns the places of the app: countries and the cities inside them. Ci
 
 | Item | Value |
 | --- | --- |
-| Owner | Member 1 |
+| Owner | Hamza Najjar |
 | Entities | Country and City |
 | Stack | Java 21, Spring Boot 4.0.8, Spring Data JPA (Hibernate), Bean Validation, Eureka client |
 | Port | 8081 (clients use the gateway on 8090) |
