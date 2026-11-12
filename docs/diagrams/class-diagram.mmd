@@ -1,0 +1,173 @@
+---
+title: Meteo App - Analysis class diagram (diagramme de classes d'analyse) - 7 microservices, 14 entities
+---
+classDiagram
+    direction TB
+
+    namespace geo_service_PostgreSQL {
+        class Country {
+            name : String
+            isoCode : String
+            continent : String
+        }
+        class City {
+            name : String
+            latitude : Double
+            longitude : Double
+            population : Integer
+            timezone : String
+        }
+    }
+
+    namespace station_service_PostgreSQL {
+        class WeatherStation {
+            code : String
+            name : String
+            latitude : Double
+            longitude : Double
+            altitude : Double
+            installationDate : Date
+            status : StationStatus
+        }
+        class Sensor {
+            serialNumber : String
+            type : SensorType
+            unit : String
+            lastCalibrationDate : Date
+            active : Boolean
+        }
+    }
+
+    namespace observation_service_MongoDB {
+        class Observation {
+            observedAt : DateTime
+            temperature : Double
+            humidity : Double
+            pressure : Double
+            windSpeed : Double
+            windDirection : Integer
+            precipitation : Double
+        }
+        class AirQuality {
+            measuredAt : DateTime
+            aqi : Integer
+            pm25 : Double
+            pm10 : Double
+            o3 : Double
+            no2 : Double
+            level : AirQualityLevel
+        }
+    }
+
+    namespace forecast_service_MongoDB {
+        class ForecastModel {
+            name : String
+            provider : String
+            version : String
+            resolutionKm : Double
+            horizonDays : Integer
+            description : String
+        }
+        class Forecast {
+            forecastDate : Date
+            minTemperature : Double
+            maxTemperature : Double
+            condition : WeatherCondition
+            precipitationProbability : Integer
+            windSpeed : Double
+            createdAt : DateTime
+        }
+    }
+
+    namespace alert_service_MySQL {
+        class Alert {
+            title : String
+            description : String
+            type : AlertType
+            severity : Severity
+            startTime : DateTime
+            endTime : DateTime
+            active : Boolean
+        }
+        class Notification {
+            channel : NotificationChannel
+            message : String
+            status : NotificationStatus
+            createdAt : DateTime
+        }
+    }
+
+    namespace user_service_MySQL {
+        class User {
+            firstName : String
+            lastName : String
+            email : String
+            phone : String
+            preferredUnit : TemperatureUnit
+            role : Role
+            createdAt : DateTime
+        }
+        class FavoriteLocation {
+            label : String
+            alertsEnabled : Boolean
+            addedAt : DateTime
+        }
+    }
+
+    namespace report_service_Python_PostgreSQL {
+        class ReportSchedule {
+            name : String
+            reportType : ReportType
+            format : ReportFormat
+            frequency : Frequency
+            recipientEmail : String
+            active : Boolean
+            createdAt : DateTime
+        }
+        class Report {
+            title : String
+            reportType : ReportType
+            format : ReportFormat
+            periodStart : Date
+            periodEnd : Date
+            status : ReportStatus
+            fileName : String
+            createdAt : DateTime
+            generatedAt : DateTime
+        }
+    }
+
+    %% Associations inside one microservice (real foreign key / reference)
+    Country "1" -- "0..*" City : contains
+    WeatherStation "1" -- "0..*" Sensor : is equipped with
+    ForecastModel "1" -- "0..*" Forecast : produces
+    Alert "1" -- "0..*" Notification : triggers
+    User "1" -- "0..*" FavoriteLocation : saves
+    ReportSchedule "0..1" -- "0..*" Report : produces
+
+    %% Associations across microservices (stored as an id: cityId, stationId, userId)
+    City "1" .. "0..*" WeatherStation : hosts
+    WeatherStation "1" .. "0..*" Observation : records
+    City "1" .. "0..*" AirQuality : is measured by
+    City "1" .. "0..*" Forecast : is forecast by
+    City "1" .. "0..*" Alert : is targeted by
+    User "1" .. "0..*" Notification : receives
+    City "1" .. "0..*" FavoriteLocation : is saved as
+    City "1" .. "0..*" Report : is reported in
+    City "1" .. "0..*" ReportSchedule : is scheduled for
+
+    %% Colour = database engine: blue PostgreSQL, green MongoDB, orange MySQL
+    style Country fill:#E3EDF9,stroke:#336791,stroke-width:1.5px
+    style City fill:#E3EDF9,stroke:#336791,stroke-width:1.5px
+    style WeatherStation fill:#E3EDF9,stroke:#336791,stroke-width:1.5px
+    style Sensor fill:#E3EDF9,stroke:#336791,stroke-width:1.5px
+    style Observation fill:#E6F4EA,stroke:#2E7D32,stroke-width:1.5px
+    style AirQuality fill:#E6F4EA,stroke:#2E7D32,stroke-width:1.5px
+    style ForecastModel fill:#E6F4EA,stroke:#2E7D32,stroke-width:1.5px
+    style Forecast fill:#E6F4EA,stroke:#2E7D32,stroke-width:1.5px
+    style Alert fill:#FDF0E1,stroke:#C26A00,stroke-width:1.5px
+    style Notification fill:#FDF0E1,stroke:#C26A00,stroke-width:1.5px
+    style User fill:#FDF0E1,stroke:#C26A00,stroke-width:1.5px
+    style FavoriteLocation fill:#FDF0E1,stroke:#C26A00,stroke-width:1.5px
+    style Report fill:#E3EDF9,stroke:#336791,stroke-width:1.5px,stroke-dasharray:6 3
+    style ReportSchedule fill:#E3EDF9,stroke:#336791,stroke-width:1.5px,stroke-dasharray:6 3

@@ -1,0 +1,15 @@
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\controller\FavoriteLocationController.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\controller\UserController.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\entity\FavoriteLocation.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\entity\Role.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\entity\TemperatureUnit.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\entity\User.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\exception\GlobalExceptionHandler.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\exception\ResourceNotFoundException.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\repository\FavoriteLocationRepository.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\repository\UserRepository.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\service\FavoriteLocationService.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\service\impl\FavoriteLocationServiceImpl.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\service\impl\UserServiceImpl.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\service\UserService.java
+C:\Users\YASSMINE\Documents\microserviceproject\Backend\user-service\src\main\java\com\meteo\user\UserServiceApplication.java

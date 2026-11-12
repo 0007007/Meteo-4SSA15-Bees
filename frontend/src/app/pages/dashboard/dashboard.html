@@ -1,0 +1,176 @@
+<h1 class="visually-hidden">Weather</h1>
+
+@if (loadingCities()) {
+  <p class="muted">Loading cities…</p>
+} @else if (problems()['cities']) {
+  <div class="alert-box" role="alert"><p>{{ problems()['cities'] }}</p></div>
+} @else if (!cities().length) {
+  <section class="first-run">
+    <h2>No city yet</h2>
+    <p>Add a country, then a city. Its weather will show here as soon as stations and forecasts exist.</p>
+    <div class="first-run-actions">
+      <a class="btn primary" routerLink="/manage/countries">Add a country</a>
+      <a class="btn" routerLink="/manage/cities">Add a city</a>
+    </div>
+  </section>
+} @else {
+  <section class="sky" [attr.data-sky]="sky()" aria-live="polite">
+    <div class="sky-top">
+      <label class="city-picker">
+        <span class="visually-hidden">City</span>
+        <select [ngModel]="cityId()" (ngModelChange)="selectCity($event)" name="city">
+          @for (c of cities(); track c['id']) {
+            <option [ngValue]="c['id']">{{ c['name'] }}</option>
+          }
+        </select>
+      </label>
+      <p class="country">{{ city()?.['country']?.['name'] }}</p>
+    </div>
+
+    <div class="sky-now">
+      <p class="temp">
+        @if (latest(); as now) {
+          {{ round(now.obs?.['temperature']) }}<span class="deg">°C</span>
+        } @else {
+          <span class="none">–</span>
+        }
+      </p>
+      <p class="condition">
+        @if (todayForecast(); as f) {
+          <span aria-hidden="true">{{ icon(f['condition']) }}</span>
+          {{ humanize(f['condition']) }}, {{ round(f['minTemperature']) }}° to {{ round(f['maxTemperature']) }}°
+        } @else {
+          No forecast for today
+        }
+      </p>
+    </div>
+
+    <dl class="sky-facts">
+      <div>
+        <dt>Humidity</dt>
+        <dd>{{ latest() ? round(latest()!.obs?.['humidity']) + '%' : '–' }}</dd>
+      </div>
+      <div>
+        <dt>Wind</dt>
+        <dd>{{ latest() ? round(latest()!.obs?.['windSpeed']) + ' km/h' : '–' }}</dd>
+      </div>
+      <div>
+        <dt>Pressure</dt>
+        <dd>{{ latest() ? round(latest()!.obs?.['pressure']) + ' hPa' : '–' }}</dd>
+      </div>
+      <div>
+        <dt>Chance of rain</dt>
+        <dd>{{ todayForecast() ? (todayForecast()!['precipitationProbability'] ?? 0) + '%' : '–' }}</dd>
+      </div>
+      <div>
+        <dt>Air quality</dt>
+        <dd>
+          @if (airQuality(); as air) {
+            {{ air['aqi'] }} <span class="aqi-level">{{ humanize(air['level']) }}</span>
+          } @else {
+            –
+          }
+        </dd>
+      </div>
+    </dl>
+
+    <p class="sky-source">
+      @if (loading()) {
+        Updating…
+      } @else if (latest(); as now) {
+        Observed {{ when(now.obs?.['observedAt']) }} at {{ now.station['name'] }}
+      } @else {
+        No observation recorded in this city yet.
+      }
+    </p>
+  </section>
+
+  @if (activeAlerts().length) {
+    <section class="block" aria-labelledby="alerts-title">
+      <h2 id="alerts-title">Active alerts</h2>
+      <ul class="alert-list">
+        @for (a of activeAlerts(); track a['id']) {
+          <li [attr.data-level]="a['severity']">
+            <span class="severity" [attr.data-level]="a['severity']">{{ humanize(a['severity']) }}</span>
+            <div>
+              <strong>{{ a['title'] }}</strong>
+              <p>
+                {{ humanize(a['type']) }}, from {{ when(a['startTime']) }}
+                @if (a['endTime']) { to {{ when(a['endTime']) }} } @else { until further notice }
+              </p>
+            </div>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+
+  <section class="block" aria-labelledby="days-title">
+    <h2 id="days-title">Next days</h2>
+    @if (nextDays().length) {
+      <ol class="days">
+        @for (d of nextDays(); track d['id']) {
+          <li>
+            <p class="day-name">{{ day(d['forecastDate']) }}</p>
+            <p class="day-icon" aria-hidden="true">{{ icon(d['condition']) }}</p>
+            <p class="day-cond">{{ humanize(d['condition']) }}</p>
+            <p class="day-temps">
+              <span class="max">{{ round(d['maxTemperature']) }}°</span>
+              <span class="min">{{ round(d['minTemperature']) }}°</span>
+            </p>
+            <p class="day-rain">Rain {{ d['precipitationProbability'] ?? 0 }}%</p>
+          </li>
+        }
+      </ol>
+    } @else if (!loading()) {
+      <p class="muted">No forecast from today on. <a routerLink="/manage/forecasts">Add a forecast</a></p>
+    }
+  </section>
+
+  <section class="block" aria-labelledby="stations-title">
+    <h2 id="stations-title">Stations in {{ city()?.['name'] }}</h2>
+    @if (readings().length) {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Station</th>
+              <th scope="col">Temperature</th>
+              <th scope="col">Humidity</th>
+              <th scope="col">Wind</th>
+              <th scope="col">Rain</th>
+              <th scope="col">Last reading</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of readings(); track r.station['id']) {
+              <tr>
+                <td><strong>{{ r.station['name'] }}</strong> <span class="muted">{{ r.station['code'] }}</span></td>
+                @if (r.obs; as o) {
+                  <td class="num">{{ round(o['temperature']) }} °C</td>
+                  <td class="num">{{ round(o['humidity']) }} %</td>
+                  <td class="num">{{ round(o['windSpeed']) }} km/h</td>
+                  <td class="num">{{ o['precipitation'] ?? 0 }} mm</td>
+                  <td>{{ when(o['observedAt']) }}</td>
+                } @else {
+                  <td colspan="5" class="muted">No observation yet</td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else if (!loading()) {
+      <p class="muted">No station in this city yet. <a routerLink="/manage/stations">Add a station</a></p>
+    }
+  </section>
+
+  @if (problemList().length) {
+    <div class="alert-box" role="alert">
+      <p><strong>Some data could not be loaded:</strong></p>
+      @for (p of problemList(); track p) {
+        <p>{{ p }}</p>
+      }
+    </div>
+  }
+}

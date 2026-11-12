@@ -1,0 +1,87 @@
+// Meteo App - Physical architecture (UML deployment view, development setup)
+// Render: dot -Tpng -Gdpi=170 physical-architecture.dot -o physical-architecture.png
+digraph physical {
+    graph [rankdir=TB, compound=true, newrank=true, fontname="Inter", fontsize=22, labelloc=t,
+           label=<<b>Meteo App - Physical architecture</b><br/><font point-size="15" color="#555555">8 Spring Boot processes, 1 Python process, the Angular dev server and 3 database containers; port 8080 stays with Oracle</font><br/> >,
+           nodesep=0.3, ranksep=0.6, pad=0.4, bgcolor="white"];
+    node  [shape=box, style="rounded,filled", fontname="Inter", fontsize=13, penwidth=1.4,
+           fillcolor="#F4F6FA", color="#3B4A6B", margin="0.16,0.08"];
+    edge  [fontname="Inter", fontsize=11, color="#3B4A6B", fontcolor="#333333", penwidth=1.2, arrowsize=0.8];
+
+    // ---------------- Client device
+    subgraph cluster_client {
+        label=<<font color="#555555">&#171;device&#187;</font> <b>Client</b>>; labeljust=l; fontsize=14;
+        style="filled"; fillcolor="#FAFAFA"; color="#3B4A6B"; penwidth=1.6;
+        client [shape=box3d, style=filled, label=<<b>Web browser</b><br/><font point-size="11">runs the Angular app (or Postman)</font>>];
+    }
+
+    // ---------------- Developer machine
+    subgraph cluster_host {
+        label=<<font color="#555555">&#171;device&#187;</font> <b>Developer machine</b> <font point-size="12">(Windows / Linux - JDK 21, Maven, Docker)</font>>;
+        labeljust=l; fontsize=14; style="filled"; fillcolor="#FAFAFA"; color="#3B4A6B"; penwidth=1.6;
+
+        subgraph cluster_jvm {
+            label=<<font color="#555555">&#171;execution environment&#187;</font> <b>JVM - one process per jar</b> <font point-size="11">(java -jar or run from IntelliJ)</font>>;
+            labeljust=l; fontsize=13; style="rounded,filled"; fillcolor="white"; color="#9AA3B5";
+
+            gateway [label=<<font point-size="10" color="#555555">&#171;artifact&#187;</font><br/><b>api-gateway.jar</b><br/>:8090>, fillcolor="#EDE7F6", color="#5E35B1", penwidth=2];
+            eureka  [label=<<font point-size="10" color="#555555">&#171;artifact&#187;</font><br/><b>discovery-server.jar</b><br/>:8761>, fillcolor="#EDE7F6", color="#5E35B1"];
+
+            geo [label=<<font point-size="10" color="#555555">&#171;artifact&#187;</font><br/><b>geo-service.jar</b><br/>:8081>, fillcolor="#E3EDF9", color="#336791"];
+            sta [label=<<font point-size="10" color="#555555">&#171;artifact&#187;</font><br/><b>station-service.jar</b><br/>:8082>, fillcolor="#E3EDF9", color="#336791"];
+            obs [label=<<font point-size="10" color="#555555">&#171;artifact&#187;</font><br/><b>observation-service.jar</b><br/>:8083>, fillcolor="#E6F4EA", color="#2E7D32"];
+            fct [label=<<font point-size="10" color="#555555">&#171;artifact&#187;</font><br/><b>forecast-service.jar</b><br/>:8084>, fillcolor="#E6F4EA", color="#2E7D32"];
+            alr [label=<<font point-size="10" color="#555555">&#171;artifact&#187;</font><br/><b>alert-service.jar</b><br/>:8085>, fillcolor="#FDF0E1", color="#C26A00"];
+            usr [label=<<font point-size="10" color="#555555">&#171;artifact&#187;</font><br/><b>user-service.jar</b><br/>:8086>, fillcolor="#FDF0E1", color="#C26A00"];
+        }
+
+        subgraph cluster_python {
+            label=<<font color="#555555">&#171;execution environment&#187;</font> <b>Python 3.11+</b> <font point-size="11">(uvicorn)</font>>;
+            labeljust=l; fontsize=13; style="rounded,filled"; fillcolor="white"; color="#9AA3B5";
+            rep [label=<<font point-size="10" color="#555555">&#171;artifact&#187;</font><br/><b>report-service</b><br/>python -m app.main :8087>, fillcolor="#E3EDF9", color="#336791", style="rounded,filled,dashed"];
+        }
+
+        subgraph cluster_node {
+            label=<<font color="#555555">&#171;execution environment&#187;</font> <b>Node.js</b> <font point-size="11">(npm start)</font>>;
+            labeljust=l; fontsize=13; style="rounded,filled"; fillcolor="white"; color="#9AA3B5";
+            ng [label=<<font point-size="10" color="#555555">&#171;artifact&#187;</font><br/><b>Angular dev server</b><br/>:4200 - proxies /api to :8090>, fillcolor="#FFFFFF", color="#3B4A6B"];
+        }
+
+        subgraph cluster_docker {
+            label=<<font color="#555555">&#171;execution environment&#187;</font> <b>Docker Engine</b> <font point-size="11">(docker compose up -d)</font>>;
+            labeljust=l; labelloc=b; fontsize=13; style="rounded,filled"; fillcolor="white"; color="#9AA3B5";
+
+            pg    [shape=box3d, style=filled, label=<<b>meteo-postgres</b><br/><font point-size="11">image postgres:17 - port 5432<br/>databases: geo_db, station_db, report_db</font>>, fillcolor="#E3EDF9", color="#336791"];
+            mongo [shape=box3d, style=filled, label=<<b>meteo-mongo</b><br/><font point-size="11">image mongo:8 - port 27017<br/>databases: observation_db, forecast_db</font>>, fillcolor="#E6F4EA", color="#2E7D32"];
+            mysql [shape=box3d, style=filled, label=<<b>meteo-mysql</b><br/><font point-size="11">image mysql:8.4 - port 3306<br/>databases: alert_db, user_db</font>>, fillcolor="#FDF0E1", color="#C26A00"];
+        }
+
+        oracle [shape=box3d, style="filled,dashed", fillcolor="#EEEEEE", color="#888888", fontcolor="#555555",
+                label=<<b>Oracle Database</b><br/><font point-size="11">already installed<br/>port 8080 reserved - not used by the app</font>>];
+    }
+
+    { rank=same; gateway; eureka; oracle; }
+    { rank=same; ng; }
+    { rank=same; geo; sta; obs; fct; alr; usr; rep; }
+    { rank=same; pg; mongo; mysql; }
+
+    client -> ng [label=<  HTTP :4200  >, penwidth=1.6];
+    ng -> gateway [label=<  HTTP/REST :8090  >, penwidth=1.6];
+    gateway -> rep [label=< HTTP :8087 >];
+    rep -> pg [label=" SQL :5432", style=dashed];
+
+    gateway -> geo [label=<HTTP :808x  >, fontsize=11]; gateway -> sta; gateway -> obs; gateway -> fct; gateway -> alr; gateway -> usr;
+    gateway -> eureka [style=dashed, color="#5E35B1", fontcolor="#5E35B1", label=" HTTP :8761 (lookup)", constraint=false];
+    geo -> eureka [style=dashed, color="#5E35B1", fontcolor="#5E35B1", constraint=false,
+                   label=<every service registers<br/>HTTP :8761>];
+
+    geo -> pg    [label=" JDBC\n :5432"];
+    sta -> pg;
+    obs -> mongo [label=" MongoDB protocol\n :27017"];
+    fct -> mongo;
+    alr -> mysql [label=" JDBC\n :3306"];
+    usr -> mysql;
+
+    // keep Oracle beside the gateway row, without a connection
+    eureka -> oracle [style=invis];
+}
