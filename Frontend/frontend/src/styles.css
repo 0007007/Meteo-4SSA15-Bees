@@ -1,0 +1,250 @@
+/* Meteo App - global tokens and shared elements */
+:root {
+  --ink: #1c2b3a;
+  --ink-soft: #4a5b6e;
+  --mist: #eef3f7;
+  --paper: #ffffff;
+  --rule: #d3dce6;
+  --sky: #2b67a8;
+  --sky-deep: #1e4e8c;
+  --sky-tint: #e1ecf7;
+
+  /* meteorological vigilance colours */
+  --yellow: #e3b200;
+  --orange: #e0731b;
+  --red: #c62f2b;
+
+  /* database colours, same as the architecture diagrams */
+  --pg: #336791;
+  --mongo: #2e7d32;
+  --mysql: #c26a00;
+
+  --font-text: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-figure: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--mist);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.75rem;
+}
+
+h2 {
+  font-size: 1.2rem;
+}
+
+a {
+  color: var(--sky);
+}
+
+:focus-visible {
+  outline: 3px solid var(--sky);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+/* ---- buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  border-color: var(--sky);
+  color: var(--sky-deep);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+.btn.primary {
+  background: var(--sky);
+  border-color: var(--sky);
+  color: #fff;
+}
+
+.btn.primary:hover {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #fff;
+}
+
+.btn.ghost {
+  background: transparent;
+}
+
+.btn.small {
+  padding: 0.3rem 0.65rem;
+  font-size: 0.875rem;
+}
+
+.btn.danger:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+/* ---- messages */
+.alert-box {
+  border-left: 4px solid var(--red);
+  background: #fbeceb;
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin: 1rem 0;
+}
+
+.alert-box p {
+  margin: 0.15rem 0;
+}
+
+.notice {
+  border-left: 4px solid var(--mongo);
+  background: #e8f4ea;
+  padding: 0.6rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin: 1rem 0;
+}
+
+/* ---- database dots */
+.db-dot {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  flex: none;
+  background: var(--ink-soft);
+}
+
+.db-dot[data-db='PostgreSQL'] {
+  background: var(--pg);
+}
+
+.db-dot[data-db='MongoDB'] {
+  background: var(--mongo);
+}
+
+.db-dot[data-db='MySQL'] {
+  background: var(--mysql);
+}
+
+/* ---- tables */
+.table-wrap {
+  overflow-x: auto;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+}
+
+th {
+  font-weight: 700;
+  color: var(--ink-soft);
+  background: #f7f9fb;
+  white-space: nowrap;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+td.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* vigilance chips */
+.severity {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+  background: var(--ink-soft);
+}
+
+.severity[data-level='YELLOW'] {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+.severity[data-level='ORANGE'] {
+  background: var(--orange);
+}
+
+.severity[data-level='RED'] {
+  background: var(--red);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
